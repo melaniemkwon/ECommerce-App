@@ -87,12 +87,7 @@ public class Details extends HttpServlet {
 
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Integer id = Integer.parseInt((String) request.getAttribute("id"));
-		String itemName = (String) request.getAttribute("itemName");
-		String itemImage = (String) request.getAttribute("itemImage");
-		String itemDescription = (String) request.getAttribute("itemDescription");
-		Integer quantity = Integer.parseInt((String) request.getAttribute("quantity"));
-		Double itemPrice = Double.parseDouble((String) request.getAttribute("itemPrice"));
+		
 		
 		
 		doGet(request, response);
