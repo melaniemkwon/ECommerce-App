@@ -32,13 +32,13 @@ public class Details extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		Integer id = Integer.parseInt(request.getParameter("id"));
-		List<itemInventory> itemInventory = new ArrayList<itemInventory>();
+		List<Item> itemInventory = new ArrayList<Item>();
 		Connection c = null;
         try
         {
         	String url = "jdbc:mysql://cs3.calstatela.edu/cs3220stu28";
             String username = "cs3220stu28";
-            String password = " ";
+            String password = "j.V*CiT.";
             
             c = DriverManager.getConnection( url, username, password );
             Statement stmt = c.createStatement();

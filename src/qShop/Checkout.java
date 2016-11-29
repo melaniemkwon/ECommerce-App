@@ -18,18 +18,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/**
+/*
  * Servlet implementation class Checkout
  */
 @WebServlet("/Checkout")
 public class Checkout extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-
-    public Checkout() {
-        super();
-      
-    }
 
     public void init( ServletConfig config ) throws ServletException
     {
@@ -51,7 +45,7 @@ public class Checkout extends HttpServlet {
         {
         	String url = "jdbc:mysql://cs3.calstatela.edu/cs3220stu28";
             String username = "cs3220stu28";
-            String password = " ";
+            String password = "DUMMY123";
             
             c = DriverManager.getConnection( url, username, password );
             Statement stmt = c.createStatement();
@@ -90,7 +84,6 @@ public class Checkout extends HttpServlet {
 		dispatcher.forward(request, response);
 	}
 
-
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String firstName = request.getParameter("firstName");
         String lastName = request.getParameter("lastName");
@@ -122,7 +115,7 @@ public class Checkout extends HttpServlet {
             {
             	String url = "jdbc:mysql://cs3.calstatela.edu/cs3220stu28";
                 String username = "cs3220stu28";
-                String password = " ";
+                String password = "DUMMY123";
                 
                 c = DriverManager.getConnection( url, username, password );
                 String sql = "truncate cart";
@@ -147,11 +140,7 @@ public class Checkout extends HttpServlet {
             
             RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/store/thankyou.jsp");
     		dispatcher.forward(request, response);
-        }// end of else part
-        
-        
-		//doGet(request, response);
+        }// end else
 	}
-
 }
 

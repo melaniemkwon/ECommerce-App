@@ -1,6 +1,6 @@
 package qShop.servlet;
 
-public class itemInventory {
+public class Item {
 	int id;
 	String itemName;
 	String itemImage;
@@ -8,7 +8,7 @@ public class itemInventory {
 	int quantity;
 	double itemPrice;
 	
-	public itemInventory(int id, String itemName, String itemImage, String itemDescription,int quantity, double itemPrice){
+	public Item(int id, String itemName, String itemImage, String itemDescription,int quantity, double itemPrice){
 		this.id = id;
 		this.itemName = itemName;
 		this.itemImage = itemImage;

@@ -32,12 +32,10 @@ public class Inventory extends HttpServlet {
             throw new ServletException( e );
         }
         
-        
     }
 
-
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		List<itemInventory> itemInventory = new ArrayList<itemInventory>();
+		List<Item> itemInventory = new ArrayList<Item>();
 		String tempId = request.getParameter("id");
 		if(tempId != null ){
 			Connection c = null;
@@ -45,27 +43,24 @@ public class Inventory extends HttpServlet {
 	        {
 	        	String url = "jdbc:mysql://cs3.calstatela.edu/cs3220stu28";
 	            String username = "cs3220stu28";
-	            String password = " ";
+	            String password = "DUMMY123";
 	            
 	            c = DriverManager.getConnection( url, username, password );
 	            Statement stmt = c.createStatement();
 	            
-	            	int id = Integer.parseInt(tempId);
-	            	
-	                String sql = "delete from itemInventory where id= ?";
-	                PreparedStatement pstmt = c.prepareStatement( sql );
-	                pstmt.setInt(1, id);
-	                pstmt.executeUpdate();
-	                //Statement stmt = c.createStatement();
-	                ResultSet rs = stmt.executeQuery( "select * from itemInventory" );
-	                while(rs.next()){
-	                		itemInventory items = new itemInventory(rs.getInt("id"), rs.getString("itemName"), rs.getString("itemImage"), rs.getString("description"),rs.getInt("quantity"), rs.getDouble("itemPrice"));
-	                    	itemInventory.add(items);
+            	int id = Integer.parseInt(tempId);
+            	
+                String sql = "delete from itemInventory where id= ?";
+                PreparedStatement pstmt = c.prepareStatement( sql );
+                pstmt.setInt(1, id);
+                pstmt.executeUpdate();
+                //Statement stmt = c.createStatement();
+                ResultSet rs = stmt.executeQuery( "select * from itemInventory" );
+                while(rs.next()){
+                		Item items = new Item(rs.getInt("id"), rs.getString("itemName"), rs.getString("itemImage"), rs.getString("description"),rs.getInt("quantity"), rs.getDouble("itemPrice"));
+                    	itemInventory.add(items);
 
-	                }
-	            
-	            
-	            
+                }
 	        }
 	        catch( SQLException e )
 	        {
@@ -82,13 +77,13 @@ public class Inventory extends HttpServlet {
 	                throw new ServletException( e );
 	            }
 	        }
-		}else {
+		} else {
 			Connection c = null;
 	        try
 	        {
 	        	String url = "jdbc:mysql://cs3.calstatela.edu/cs3220stu28";
 	            String username = "cs3220stu28";
-	            String password = " ";
+	            String password = "DUMMY123";
 	            
 	            c = DriverManager.getConnection( url, username, password );
 	            Statement stmt = c.createStatement();
@@ -96,13 +91,11 @@ public class Inventory extends HttpServlet {
 	                
 	                ResultSet rs = stmt.executeQuery( "select * from itemInventory" );
 	                while(rs.next()){
-	                		itemInventory items = new itemInventory(rs.getInt("id"), rs.getString("itemName"), rs.getString("itemImage"), rs.getString("description"),rs.getInt("quantity"), rs.getDouble("itemPrice"));
+	                		Item items = new Item(rs.getInt("id"), rs.getString("itemName"), rs.getString("itemImage"), rs.getString("description"),rs.getInt("quantity"), rs.getDouble("itemPrice"));
 	                    	itemInventory.add(items);
 
 	                }
-	            
-	            
-	            
+
 	        }
 	        catch( SQLException e )
 	        {
@@ -120,7 +113,6 @@ public class Inventory extends HttpServlet {
 	            }
 	        }
 		}
-		
 		
         request.setAttribute("itemInventory", itemInventory);
 		request.getRequestDispatcher( "/WEB-INF/store/inventory.jsp" ).forward( request, response );		
@@ -131,22 +123,46 @@ public class Inventory extends HttpServlet {
 		String itemName = request.getParameter("itemName");
 		String itemImage = request.getParameter("itemImage");
 		String itemDescription = request.getParameter("itemDescription");
-		Integer itemQuantity = Integer.parseInt(request.getParameter("itemQuantity"));
-		Double itemPrice = Double.parseDouble(request.getParameter("itemPrice"));
-		boolean hasError = true;
+		Integer itemQuantity = null;
+		Double itemPrice = null;
+		boolean hasError = false;
+		
+		// sticky form
+		request.setAttribute("itemName", itemName);
+		request.setAttribute("itemImage", itemImage);
+		request.setAttribute("itemDescription", itemDescription);
+		
+		try {
+			itemQuantity = Integer.parseInt(request.getParameter("itemQuantity"));
+			request.setAttribute("itemQuantity", itemQuantity);
+		}
+		catch (NumberFormatException e) {
+			request.setAttribute("quantityError", "Please enter a valid quantity.");
+			hasError = true;
+		}
+		
+		try {
+			itemPrice = Double.parseDouble(request.getParameter("itemPrice"));
+			request.setAttribute("itemPrice", itemPrice);
+		}
+		catch (NumberFormatException e) {
+			request.setAttribute("priceError", "Please enter a valid price.");
+			hasError = true;
+		}
+		
 		if(itemName == null || itemName.trim().length() == 0){
 			request.setAttribute("nameError", "Please enter name");
-			hasError = false;
+			hasError = true;
 		}
 		if(itemImage == null || itemImage.trim().length() == 0){
 			request.setAttribute("imageError", "Please enter an image url");
-			hasError = false;
+			hasError = true;
 		}
 		if(itemDescription == null || itemDescription.trim().length() == 0){
 			request.setAttribute("descriptionError", "Please enter name");
-			hasError = false;
+			hasError = true;
 		}
-		if(!hasError){
+		if(hasError){
 			doGet(request, response);
             return;
 		}
@@ -156,7 +172,7 @@ public class Inventory extends HttpServlet {
 	        {
 	        	String url = "jdbc:mysql://cs3.calstatela.edu/cs3220stu28";
 	            String username = "cs3220stu28";
-	            String password = " ";
+	            String password = "DUMMY123";
 	            
 	            c = DriverManager.getConnection( url, username, password );
 	            Statement stmt = c.createStatement();
@@ -168,8 +184,6 @@ public class Inventory extends HttpServlet {
 	            pstmt.setInt(4, itemQuantity);
 	            pstmt.setDouble(5, itemPrice);
 	            pstmt.executeUpdate();
-	            
-	          
 	        }
 	        catch( SQLException e )
 	        {
@@ -187,11 +201,7 @@ public class Inventory extends HttpServlet {
 	            }
 	        }
 			doGet(request, response);
-		}
-		
+		}		
 	}
-	
-	
-
 }
 	      

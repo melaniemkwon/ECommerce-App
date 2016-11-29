@@ -18,6 +18,8 @@
     /* Remove the jumbotron's default bottom margin */
      .jumbotron {
       margin-bottom: 0;
+      background: linear-gradient(141deg, #0fb8ad 0%, #1fc8db 51%, #2cb5e8 75%);
+      color: white;
     }
    
     /* Add a gray background color and some padding to the footer */
@@ -80,7 +82,7 @@
                 <th>Description</th>
                 <th>Price</th>
                 <th>Quantity</th>
-                
+                <th>Edit</th>
                 <th>Remove</th>
             </tr>
         </thead>
@@ -102,7 +104,11 @@
                     ${item.quantity}            
                     </td>
                     
-                  
+                    <form action="UpdateQuantity" method="post">
+                    <td>
+                        <a href="EditInventory?id=${item.id}" class="btn btn-info" role="button"><span class="glyphicon glyphicon-pencil"></span></a>  
+                    </td>
+                    </form>
                     
                     <td>
                   	  <a href="Inventory?id=${item.id}" class="btn btn-danger" role="button"><span class="glyphicon glyphicon-remove"></span></a>           
@@ -123,7 +129,7 @@
         	<div class="form-group row">
 						  <label for="example-text-input" class="col-xs-2 col-form-label">Name of Product</label>
 						  <div class="col-xs-10">
-						    <input class="form-control" type="text" placeholder="Enter Item Name" name="itemName">
+						    <input class="form-control" type="text" placeholder="Enter Item Name" name="itemName" value=${itemName}>
 						    <c:if test="${not empty nameError}">
                    				 <p class="well-sm bg-danger">${nameError}</p>
                				</c:if>
@@ -133,7 +139,7 @@
 			<div class="form-group row">
 						  <label for="example-text-input" class="col-xs-2 col-form-label">Image Url</label>
 						  <div class="col-xs-10">
-						    <input class="form-control" type="text" placeholder="Enter Image Url" name="itemImage">
+						    <input class="form-control" type="text" placeholder="Enter Image Url" name="itemImage" value=${itemImage}>
 						    <c:if test="${not empty imageError}">
                    				 <p class="well-sm bg-danger">${imageError}</p>
                				</c:if>
@@ -142,7 +148,7 @@
 			<div class="form-group row">
 						  <label for="example-text-input" class="col-xs-2 col-form-label">Description</label>
 						  <div class="col-xs-10">
-						    <input class="form-control" type="text" placeholder="Enter Item Description" name="itemDescription">
+						    <input class="form-control" type="text" placeholder="Enter Item Description" name="itemDescription" value=${itemDescription}>
 						    <c:if test="${not empty descriptionError}">
                    				 <p class="well-sm bg-danger">${descriptionError}</p>
                				</c:if>
@@ -151,19 +157,25 @@
 			<div class="form-group row">
 						  <label for="example-text-input" class="col-xs-2 col-form-label">Quantity</label>
 						  <div class="col-xs-10">
-						    <input class="form-control" type="text" placeholder="Enter Item Quanity" name="itemQuantity">
-						  </div>
+						    <input class="form-control" type="text" placeholder="Enter Item Quanity" name="itemQuantity" value=${itemQuantity}>
+						      <c:if test="${not empty quantityError}">
+                                 <p class="well-sm bg-danger">${quantityError}</p>
+                                </c:if>
+						  </div> 
 					</div>
 			<div class="form-group row">
 						  <label for="example-text-input" class="col-xs-2 col-form-label">Price</label>
 						  <div class="col-xs-10">
-						    <input class="form-control" type="text" placeholder="Enter Item Price" name="itemPrice">
+						    <input class="form-control" type="text" placeholder="Enter Item Price" name="itemPrice" value=${itemPrice}>
+						      <c:if test="${not empty priceError}">
+                                 <p class="well-sm bg-danger">${priceError}</p>
+                            </c:if>
 						  </div>
 					</div>
 			<div class="form-group row">
 			  <label for="example-search-input" class="col-xs-2 col-form-label"></label>
 			  <div class="col-xs-10">
-			    <button class="btn btn-primary" typy="submit">Add to Inventory</button>
+			    <button class="btn btn-primary" type="submit">Add to Inventory</button>
 			  </div>
 			</div>
         
@@ -175,8 +187,6 @@
         
 
     </div>
-    
- </div> 
 
 </body>
 </html>

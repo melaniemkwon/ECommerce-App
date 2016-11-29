@@ -34,11 +34,12 @@
       </div>
     </div>
     <div class="container panel panel-default">
-    <h4>1   Enter Your Information</h4>
+    
     <form id="checkoutForm" action="Checkout" method="post" class="bottom-align-text">
         <div class="row">
-        
+        <hr />
            <div class="col-md-5">   
+               <h4>Enter Your Information</h4>
                <input type="text" class="form-control" name="firstName" placeholder="First Name"><br>
                <c:if test="${not empty error_firstName}">
                     <p class="well-sm bg-danger">${error_firstName}</p>
@@ -53,7 +54,7 @@
                </c:if>
            </div>
            
-           <div class="col-md-4 col-md-offset-2">
+           <div class="col-md-5 col-md-offset-2">
               <div class="panel panel-default">
                    <div class="row">
                       <div class="col-md-10 col-md-offset-1">
@@ -91,7 +92,11 @@
    </form>
    
    <hr />
-   
+
     </div>
+    <footer class="container-fluid text-center">
+  <p>&copy Q-Online Shop Store</p>
+  
+</footer>
 </body>
 </html>

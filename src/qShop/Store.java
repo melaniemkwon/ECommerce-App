@@ -18,17 +18,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import todoList.servlet.TodoListEntry;
-
-
 @WebServlet("/Store")
 public class Store extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-
-    public Store() {
-        super();
-        
-    }
 
     public void init( ServletConfig config ) throws ServletException
     {
@@ -45,7 +37,7 @@ public class Store extends HttpServlet {
     }
     
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		List<itemInventory> itemInventory = new ArrayList<itemInventory>();
+		List<Item> itemInventory = new ArrayList<Item>();
 		String query = request.getParameter("query");
 		request.setAttribute("query", query);
 		Connection c = null;
@@ -53,15 +45,15 @@ public class Store extends HttpServlet {
         {
         	String url = "jdbc:mysql://cs3.calstatela.edu/cs3220stu28";
             String username = "cs3220stu28";
-            String password = " ";
+            String password = "DUMMY123";
             
             c = DriverManager.getConnection( url, username, password );
             Statement stmt = c.createStatement();
             ResultSet rs = stmt.executeQuery( "select * from itemInventory" );
             while(rs.next()){
             	
-            	if(query == null || rs.getString("itemName").contains(query)){
-            		itemInventory items = new itemInventory(rs.getInt("id"), rs.getString("itemName"), rs.getString("itemImage"),rs.getString("description"),rs.getInt("quantity"), rs.getDouble("itemPrice"));
+            	if(query == null || query.isEmpty() || rs.getString("itemName").toLowerCase().contains(query.toLowerCase())){
+            		Item items = new Item(rs.getInt("id"), rs.getString("itemName"), rs.getString("itemImage"),rs.getString("description"),rs.getInt("quantity"), rs.getDouble("itemPrice"));
                 	itemInventory.add(items);
             	}
             	
@@ -110,7 +102,7 @@ public class Store extends HttpServlet {
         {
         	String url = "jdbc:mysql://cs3.calstatela.edu/cs3220stu28";
             String username = "cs3220stu28";
-            String password = " ";
+            String password = "DUMMY123";
             
             c = DriverManager.getConnection( url, username, password );
             
@@ -132,7 +124,6 @@ public class Store extends HttpServlet {
             pstmt1.setInt(1, availableQty);
             pstmt1.setInt(2, id);
             pstmt1.executeUpdate();
-           
 
         }
         catch( SQLException e )

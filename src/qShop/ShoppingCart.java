@@ -22,11 +22,6 @@ import javax.servlet.http.HttpServletResponse;
 public class ShoppingCart extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-
-    public ShoppingCart() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
     public void init( ServletConfig config ) throws ServletException
     {
         super.init( config );
@@ -48,7 +43,7 @@ public class ShoppingCart extends HttpServlet {
         {
         	String url = "jdbc:mysql://cs3.calstatela.edu/cs3220stu28";
             String username = "cs3220stu28";
-            String password = " ";
+            String password = "DUMMY123";
             
             c = DriverManager.getConnection( url, username, password );
             Statement stmt = c.createStatement();
@@ -70,8 +65,7 @@ public class ShoppingCart extends HttpServlet {
             	String count = rs2.getString("count(*)");
             	request.setAttribute("cartLength", count);
             }
-            
-
+           
         }
         catch( SQLException e )
         {
@@ -94,7 +88,6 @@ public class ShoppingCart extends HttpServlet {
 }
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		
 		Integer id = Integer.valueOf( request.getParameter( "id" ) );
 		
 		Connection c = null;
@@ -102,16 +95,13 @@ public class ShoppingCart extends HttpServlet {
         {
         	String url = "jdbc:mysql://cs3.calstatela.edu/cs3220stu28";
             String username = "cs3220stu28";
-            String password = " ";
+            String password = "DUMMY123";
             
             c = DriverManager.getConnection( url, username, password );
             String sql = "delete from cart where id = ?";
             PreparedStatement pstmt = c.prepareStatement( sql );
             pstmt.setInt(1, id);
             pstmt.executeUpdate();
-            
-        
-
         }
         catch( SQLException e )
         {
@@ -130,7 +120,6 @@ public class ShoppingCart extends HttpServlet {
         }
        
         response.sendRedirect("ShoppingCart");
-		//doGet(request, response);
 	}
 
 }

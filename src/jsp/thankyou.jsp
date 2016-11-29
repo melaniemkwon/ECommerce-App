@@ -21,6 +21,8 @@
     /* Remove the jumbotron's default bottom margin */
      .jumbotron {
       margin-bottom: 0;
+      background: linear-gradient(141deg, #0fb8ad 0%, #1fc8db 51%, #2cb5e8 75%);
+      color: white;
     }
    
     /* Add a gray background color and some padding to the footer */
@@ -43,7 +45,7 @@
 	<div class="jumbotron">
   <div class="container text-center">
     <h1>Q-Shop Store</h1>
-    <p>Mission, Vission & Values</p>
+    <p>Quick service, quick shipping.</p>
   </div>
 </div>
 
@@ -72,7 +74,8 @@
     </div>
   </div>
 </nav>
-	<h2 id="welcome">Thank You..! For Shopping with us.</h2>
+	<h2 id="welcome">Thank you for shopping with us!</h2>
+	<h4 id="welcome">Your order is on its way.</h4>
 	<h2 id="welcome"><a id="button" class="btn btn-primary btn-lg" href="Store"><span class="glyphicon glyphicon-home"></span> Store Front</a></h2>
 
 <footer class="container-fluid text-center">

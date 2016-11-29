@@ -21,6 +21,8 @@
     /* Remove the jumbotron's default bottom margin */
      .jumbotron {
       margin-bottom: 0;
+      background: linear-gradient(141deg, #0fb8ad 0%, #1fc8db 51%, #2cb5e8 75%);
+      color: white;
     }
    
     /* Add a gray background color and some padding to the footer */
@@ -37,7 +39,7 @@
 	<div class="jumbotron">
   <div class="container text-center">
     <h1>Q-Shop Store</h1>
-    <p>Mission, Vission & Values</p>
+    <p>Quick service, quick shipping.</p>
   </div>
 </div>
 
@@ -56,11 +58,13 @@
         <li class="active"><a href="Store">Home</a></li>
         <li><a href="Inventory">Administrator</a></li>
         
+        
         	<li id="search-bar"><form action="Store" method="get"><input type="text" name="query" placeholder="Search Item" >
       	    <button type="submit" class="btn btn-default btn-xs glyphicon glyphicon-search" ></button></form>  </li> 
           
       </ul>
       <ul class="nav navbar-nav navbar-right">
+        <li><a href="History">Orders</a></li>
         <li><a href="ShoppingCart"><span class="glyphicon glyphicon-shopping-cart"></span> Cart (${requestScope["cartLength"]})</a></li>
       </ul>
     </div>
