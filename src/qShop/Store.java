@@ -34,18 +34,26 @@ public class Store extends HttpServlet {
         {
             throw new ServletException( e );
         }
+ 
     }
     
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		List<Item> itemInventory = new ArrayList<Item>();
 		String query = request.getParameter("query");
 		request.setAttribute("query", query);
+		
+		ArrayList<cartInventory> cart = (ArrayList<cartInventory>) request.getSession().getAttribute("cart");
+
+		if (cart == null) {
+			cart = new ArrayList<cartInventory>();
+		}
+
 		Connection c = null;
         try
         {
         	String url = "jdbc:mysql://cs3.calstatela.edu/cs3220stu28";
             String username = "cs3220stu28";
-            String password = "DUMMY123";
+            String password = "j.V*CiT.";
             
             c = DriverManager.getConnection( url, username, password );
             Statement stmt = c.createStatement();
@@ -58,13 +66,6 @@ public class Store extends HttpServlet {
             	}
             	
             }
-            Statement stmt1 = c.createStatement();
-            ResultSet rs1 = stmt1.executeQuery( "select count(*) from cart" );
-            while(rs1.next() ){
-            	String count = rs1.getString("count(*)");
-            	request.setAttribute("cartLength", count);
-            }
-            
 
         }
         catch( SQLException e )
@@ -83,64 +84,78 @@ public class Store extends HttpServlet {
             }
         }
         request.setAttribute("itemInventory", itemInventory);
+        
+        request.getSession().setAttribute("cart", cart);
+        request.setAttribute("cartLength", cart.size());
+        
     	RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/store/qShop.jsp");
 		dispatcher.forward(request, response);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String itemName = request.getParameter("itemName");
-		String itemImage = request.getParameter("itemImage");
 		int id = Integer.parseInt(request.getParameter("id"));
-		int qty = Integer.parseInt(request.getParameter("quantity"));
+		String itemName = request.getParameter("itemName");
+		String itemImage = request.getParameter("itemImage");	
 		int itemQuantity = Integer.parseInt(request.getParameter("itemQuantity"));
-		int availableQty = itemQuantity - qty;
 		double itemPrice = Double.parseDouble(request.getParameter("itemPrice"));
+		
+		int qty = Integer.parseInt(request.getParameter("quantity"));
+		int availableQty = itemQuantity - qty;	
 		double totalPrice = qty*itemPrice;
 		
-		Connection c = null;
-        try
-        {
-        	String url = "jdbc:mysql://cs3.calstatela.edu/cs3220stu28";
-            String username = "cs3220stu28";
-            String password = "DUMMY123";
-            
-            c = DriverManager.getConnection( url, username, password );
-            
-            String sql = "insert into cart values (0, ?, ?, ?, ?)";
-            PreparedStatement pstmt = c.prepareStatement( sql );
-            pstmt.setString(1, itemName);
-            pstmt.setString(2, itemImage);
-            pstmt.setInt(3, qty);
-            pstmt.setDouble(4, totalPrice);
-            pstmt.executeUpdate();
-            Statement stmt = c.createStatement();
-            ResultSet rs = stmt.executeQuery( "select count(*) from cart" );
-            while(rs.next() ){
-            	String count = rs.getString("count(*)");
-            	request.setAttribute("cartLength", count);
-            }
-            String sql1 = "update itemInventory set quantity = ? where id= ?";
-            PreparedStatement pstmt1 = c.prepareStatement( sql1 );
-            pstmt1.setInt(1, availableQty);
-            pstmt1.setInt(2, id);
-            pstmt1.executeUpdate();
-
-        }
-        catch( SQLException e )
-        {
-            throw new ServletException( e );
-        }
-        finally
-        {
-            try
-            {
-                if( c != null ) c.close();
-            }
-            catch( SQLException e )
-            {
-                throw new ServletException( e );
-            }
-        }
+		ArrayList<cartInventory> cart = (ArrayList<cartInventory>) request.getSession().getAttribute("cart");
+		
+		cart.add(new cartInventory(id, itemName, itemImage, itemQuantity, itemPrice));
+		
+    	request.setAttribute("cartLength", cart.size());
+		
+//		Connection c = null;
+//        try
+//        {
+//        	String url = "jdbc:mysql://cs3.calstatela.edu/cs3220stu28";
+//            String username = "cs3220stu28";
+//            String password = "j.V*CiT.";
+//            
+//            c = DriverManager.getConnection( url, username, password );
+//            
+//            String sql = "insert into cart values (0, ?, ?, ?, ?)";
+//            PreparedStatement pstmt = c.prepareStatement( sql );
+//            pstmt.setString(1, itemName);
+//            pstmt.setString(2, itemImage);
+//            pstmt.setInt(3, qty);
+//            pstmt.setDouble(4, totalPrice);
+//            pstmt.executeUpdate();
+//            Statement stmt = c.createStatement();
+//            ResultSet rs = stmt.executeQuery( "select count(*) from cart" );
+//            while(rs.next() ){
+//            	String count = rs.getString("count(*)");
+//            	request.setAttribute("cartLength", count);
+//            }
+//            String sql1 = "update itemInventory set quantity = ? where id= ?";
+//            PreparedStatement pstmt1 = c.prepareStatement( sql1 );
+//            pstmt1.setInt(1, availableQty);
+//            pstmt1.setInt(2, id);
+//            pstmt1.executeUpdate();
+//
+//        }
+//        catch( SQLException e )
+//        {
+//            throw new ServletException( e );
+//        }
+//        finally
+//        {
+//            try
+//            {
+//                if( c != null ) c.close();
+//            }
+//            catch( SQLException e )
+//            {
+//                throw new ServletException( e );
+//            }
+//        }
+    	
+    	request.getSession().setAttribute("cart", cart);
+    	
 		doGet(request, response);
 	}
 

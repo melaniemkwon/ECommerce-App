@@ -54,5 +54,11 @@ public class cartInventory {
 	public void setPrice(double price) {
 		this.price = price;
 	}
+	
+	// method to return quantity * price
+	public double getTotal() {
+		System.out.println("call getTotal: quantity * price = " + quantity + " + " + price);
+		return quantity * price;
+	}
 }
 

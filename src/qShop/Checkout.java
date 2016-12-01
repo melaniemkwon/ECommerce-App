@@ -39,52 +39,69 @@ public class Checkout extends HttpServlet {
         }
     }
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		List<cartInventory> cartInventory = new ArrayList<cartInventory>();
-		Connection c = null;
-        try
-        {
-        	String url = "jdbc:mysql://cs3.calstatela.edu/cs3220stu28";
-            String username = "cs3220stu28";
-            String password = "DUMMY123";
-            
-            c = DriverManager.getConnection( url, username, password );
-            Statement stmt = c.createStatement();
-            ResultSet rs = stmt.executeQuery( "select * from cart" );
-            while(rs.next()){
-            	cartInventory items = new cartInventory(rs.getInt("id"), rs.getString("itemName"), rs.getString("itemImage"), rs.getInt("itemQuantity"),rs.getDouble("itemPrice"));
-            	cartInventory.add(items);
-       
-            }
-            Statement stmt1 = c.createStatement();
-            ResultSet rs1 = stmt1.executeQuery( "select sum(itemPrice) from cart" );
-            while(rs1.next()){
-            	String totalPrice = rs1.getString("sum(itemPrice)");
-            	request.setAttribute("totalPrice", totalPrice);
-            }
-
-        }
-        catch( SQLException e )
-        {
-            throw new ServletException( e );
-        }
-        finally
-        {
-            try
-            {
-                if( c != null ) c.close();
-            }
-            catch( SQLException e )
-            {
-                throw new ServletException( e );
-            }
-        }
+		ArrayList<cartInventory> cart = (ArrayList<cartInventory>) request.getSession().getAttribute("cart");
+		
+		double grandTotal = 0;
+		for (cartInventory c : cart) {
+			grandTotal += c.getTotal();
+		}
+		
+		request.setAttribute("totalPrice", grandTotal);
+		
+		System.out.println("totalPrice in cart = " + grandTotal);
+		//System.out.println("num items in cart = " + itemCount);
+		
+//		List<cartInventory> cartInventory = new ArrayList<cartInventory>();
+//		Connection c = null;
+//        try
+//        {
+//        	String url = "jdbc:mysql://cs3.calstatela.edu/cs3220stu28";
+//            String username = "cs3220stu28";
+//            String password = "j.V*CiT.";
+//            
+//            c = DriverManager.getConnection( url, username, password );
+//            Statement stmt = c.createStatement();
+//            ResultSet rs = stmt.executeQuery( "select * from cart" );
+//            while(rs.next()){
+//            	cartInventory items = new cartInventory(rs.getInt("id"), rs.getString("itemName"), rs.getString("itemImage"), rs.getInt("itemQuantity"),rs.getDouble("itemPrice"));
+//            	cartInventory.add(items);
+//       
+//            }
+//            Statement stmt1 = c.createStatement();
+//            ResultSet rs1 = stmt1.executeQuery( "select sum(itemPrice) from cart" );
+//            while(rs1.next()){
+//            	String totalPrice = rs1.getString("sum(itemPrice)");
+//            	request.setAttribute("totalPrice", totalPrice);
+//            }
+//
+//        }
+//        catch( SQLException e )
+//        {
+//            throw new ServletException( e );
+//        }
+//        finally
+//        {
+//            try
+//            {
+//                if( c != null ) c.close();
+//            }
+//            catch( SQLException e )
+//            {
+//                throw new ServletException( e );
+//            }
+//        }
+//        
+//        request.setAttribute("cartInventory", cartInventory);
         
-        request.setAttribute("cartInventory", cartInventory);
+        request.getSession().setAttribute("cart", cart);
     	RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/store/checkout.jsp");
 		dispatcher.forward(request, response);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		ArrayList<cartInventory> cart = (ArrayList<cartInventory>) request.getSession().getAttribute("cart");
+		
+		// FORM CONTROLS
 		String firstName = request.getParameter("firstName");
         String lastName = request.getParameter("lastName");
         String email = request.getParameter("email");
@@ -108,19 +125,29 @@ public class Checkout extends HttpServlet {
             doGet(request, response);
             return;
         }
-        // Else successfully submit the order
+        // Else successfully submit the order. Execute transaction on database.
         else {
         	Connection c = null;
             try
             {
             	String url = "jdbc:mysql://cs3.calstatela.edu/cs3220stu28";
                 String username = "cs3220stu28";
-                String password = "DUMMY123";
+                String password = "j.V*CiT.";
                 
                 c = DriverManager.getConnection( url, username, password );
-                String sql = "truncate cart";
-                PreparedStatement pstmt = c.prepareStatement( sql );
-                pstmt.executeUpdate();
+                
+                //subtract cart item quantities from itemInventory
+                for (cartInventory i : cart) {
+                	String sql = "UPDATE itemInventory SET quantity = ? WHERE id = ?";
+    	            PreparedStatement pstmt = c.prepareStatement( sql );
+    	            pstmt.setInt( 1, i.getQuantity() );
+    	            pstmt.setInt( 2, i.getId() );
+    	            pstmt.executeUpdate();
+        		}
+                
+                //empty the cart
+                cart.clear();
+                request.getSession().setAttribute("cart", cart);
             }
             catch( SQLException e )
             {
