@@ -28,7 +28,7 @@ public class EditInventory extends HttpServlet {
 		try {
 			String url = "jdbc:mysql://cs3.calstatela.edu/cs3220stu28";
             String username = "cs3220stu28";
-            String password = "j.V*CiT.";
+            String password = "";
 
             c = DriverManager.getConnection( url, username, password );
             
@@ -73,7 +73,7 @@ public class EditInventory extends HttpServlet {
 			try {
 				String url = "jdbc:mysql://cs3.calstatela.edu/cs3220stu28";
 	            String username = "cs3220stu28";
-	            String password = "j.V*CiT.";
+	            String password = "";
 	            c = DriverManager.getConnection( url, username, password );
 	            
 	            String sql = "UPDATE itemInventory SET itemName = ?, itemImage = ?, description = ?, quantity = ?, itemPrice = ? WHERE id = ?";
