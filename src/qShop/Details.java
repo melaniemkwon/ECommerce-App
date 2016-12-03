@@ -38,7 +38,7 @@ public class Details extends HttpServlet {
         {
         	String url = "jdbc:mysql://cs3.calstatela.edu/cs3220stu28";
             String username = "cs3220stu28";
-            String password = "j.V*CiT.";
+            String password = "";
             
             c = DriverManager.getConnection( url, username, password );
             Statement stmt = c.createStatement();
